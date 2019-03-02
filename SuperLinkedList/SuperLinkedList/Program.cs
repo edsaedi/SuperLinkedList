@@ -8,43 +8,106 @@ namespace SuperLinkedList
     /// A singular/doubly circular linked list that can use System.Linq.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal class MyLinkedList<T> : ICollection<T>
+    public class MyLinkedList<T> : ICollection<T>
     {
         internal class MyNode
         {
             public T Value;
-            public T Next;
+            public MyNode Next = null;
+            public MyNode Prev = null;
+
+            internal MyNode(T value)
+            {
+                Value = value;
+            }
+
+            internal MyNode(T value, MyNode next, MyNode prev)
+            {
+                Value = value;
+                Next = next;
+                Prev = prev;
+            }
         }
-        public int Count => throw new NotImplementedException();
 
-        public bool IsReadOnly => throw new NotImplementedException();
+        public int Count { get; private set; } = 0;
 
-        public T Head;
-        public T Tail;
+        bool ICollection<T>.IsReadOnly => false;
 
-        public void Add(T item)
+        private MyNode Head;
+        private MyNode Tail => Head.Prev;
+
+        void ICollection<T>.Add(T item)
         {
-            throw new NotImplementedException();
+            AddLast(item);
+        }
+
+        public void AddFirst(T item)
+        {
+            AddLast(item);
+            Head = Tail;
+        }
+
+        public void AddLast(T item)
+        {
+            Count++;
+            if (Head == null)
+            {
+                Head = new MyNode(item);
+                return;
+            }
+            MyNode node = new MyNode(item, Head, Tail);
+            Tail.Next = node;
+            Head.Prev = node; //shifts and redefines what tail is
         }
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            Head = null;
         }
 
         public bool Contains(T item)
         {
-            throw new NotImplementedException();
+            if (Find(item) == null)
+            {
+                return false;
+            }
+            return true;
         }
+
+        private MyNode Find(T item)
+        {
+            MyNode temp = Head;
+            int count = 0;
+            while (!temp.Value.Equals(item))
+            {
+                if (count > Count)
+                {
+                    return null;
+                }
+                temp = temp.Next;
+            }
+            return temp;
+        }
+
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            for (int i = arrayIndex; i < array.Length; i++)
+            {
+                AddLast(array[i]);
+            }
         }
 
         public bool Remove(T item)
         {
-            throw new NotImplementedException();
+            if (!Contains(item))
+            {
+                return false;
+            }
+            MyNode node = Find(item);
+            node.Prev.Next = node.Next;
+            node.Next.Prev = node.Prev;
+            return true;
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -58,13 +121,21 @@ namespace SuperLinkedList
         }
     }
 
+    internal class Parent
+    {
+        public int X;
+    }
+
+    internal class Child : Parent
+    {
+        public int Y;
+    }
+
     internal class Program
     {
         private static void Main(string[] args)
         {
-
-
-
+            MyLinkedList<int> numbers = new MyLinkedList<int>();
         }
     }
 }

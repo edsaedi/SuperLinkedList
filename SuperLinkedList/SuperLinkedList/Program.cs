@@ -29,6 +29,29 @@ namespace SuperLinkedList
             }
         }
 
+        public T this[int index]
+        {
+            get
+            {
+                MyNode curr = Head;
+                for (int i = 0; i < index; i++)
+                {
+                    curr = curr.Next;
+                }
+                return curr.Value;
+            }
+            set
+            {
+                MyNode curr = Head;
+                for (int i = 0; i < index; i++)
+                {
+                    curr = curr.Next;
+                }
+                curr.Value = value;
+            }
+        }
+
+
         public int Count { get; private set; } = 0;
 
         bool ICollection<T>.IsReadOnly => false;
@@ -121,21 +144,13 @@ namespace SuperLinkedList
         }
     }
 
-    internal class Parent
-    {
-        public int X;
-    }
-
-    internal class Child : Parent
-    {
-        public int Y;
-    }
-
     internal class Program
     {
         private static void Main(string[] args)
         {
             MyLinkedList<int> numbers = new MyLinkedList<int>();
+
+            numbers[3] = 4;
         }
     }
 }

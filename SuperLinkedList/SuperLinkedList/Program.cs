@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 
 namespace SuperLinkedList
 {
     /// <summary>
-    /// A singular/doubly circular linked list that can use System.Linq.
+    /// A doubly circular linked list that can use System.Linq.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class MyLinkedList<T> : ICollection<T>
@@ -72,15 +71,19 @@ namespace SuperLinkedList
 
         public void AddLast(T item)
         {
-            Count++;
             if (Head == null)
             {
                 Head = new MyNode(item);
-                return;
+                Head.Next = Head;
+                Head.Prev = Head;
             }
-            MyNode node = new MyNode(item, Head, Tail);
-            Tail.Next = node;
-            Head.Prev = node; //shifts and redefines what tail is
+            else
+            {
+                MyNode node = new MyNode(item, Head, Tail);
+                Tail.Next = node;
+                Head.Prev = node; //shifts and redefines what tail is
+            }
+            Count++;
         }
 
         public void Clear()
@@ -135,12 +138,16 @@ namespace SuperLinkedList
 
         public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
+            MyNode currentNode = Head;
+            for (int i = 0; i < Count; currentNode = currentNode.Next, i++)
+            {
+                yield return currentNode.Value;
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return GetEnumerator();
         }
     }
 
@@ -149,8 +156,10 @@ namespace SuperLinkedList
         private static void Main(string[] args)
         {
             MyLinkedList<int> numbers = new MyLinkedList<int>();
-
-            numbers[3] = 4;
+            for (int i = 0; i < 10; i++)
+            {
+                numbers.AddFirst(i + 1);
+            }
         }
     }
 }

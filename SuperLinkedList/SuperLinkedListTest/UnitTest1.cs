@@ -42,7 +42,7 @@ namespace SuperLinkedListTest
         {
             for (int i = 0; i < array.Length; i++)
             {
-                
+
             }
         }
 
@@ -60,7 +60,7 @@ namespace SuperLinkedListTest
             MyLinkedList<int> list = ListGenerator(array);
             for (int i = 0; i < size; i++)
             {
-                
+
             }
         }
     }

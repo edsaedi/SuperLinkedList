@@ -9,7 +9,7 @@ namespace SuperLinkedList
     /// <typeparam name="T"></typeparam>
     public class MyLinkedList<T> : ICollection<T>
     {
-        internal class MyNode
+        public class MyNode
         {
             public T Value;
             public MyNode Next = null;
@@ -49,13 +49,12 @@ namespace SuperLinkedList
                 curr.Value = value;
             }
         }
-
-
+        
         public int Count { get; private set; } = 0;
 
         bool ICollection<T>.IsReadOnly => false;
 
-        private MyNode Head;
+        public MyNode Head { get; private set; }
         private MyNode Tail => Head.Prev;
 
         void ICollection<T>.Add(T item)

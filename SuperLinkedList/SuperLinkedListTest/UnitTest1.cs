@@ -2,6 +2,7 @@ using SuperLinkedList;
 using System;
 using System.Linq;
 using Xunit;
+
 namespace SuperLinkedListTest
 {
     public class UnitTest1
@@ -38,12 +39,27 @@ namespace SuperLinkedListTest
             return array;
         }
 
-        public void CheckNode(int[] array, MyLinkedList<int> list)
+        public bool CheckNode(int[] array, MyLinkedList<int> list)
         {
-            for (int i = 0; i < array.Length; i++)
+            int index = 0;
+            foreach (int item in list)
             {
+                if (array[index] != item)
+                {
+                    return false;
+                }
+                else if (array[index + 1] == item)
+                {
+                    if (index + 1 >= list.Count)
+                    {
 
+                    }
+                }
+
+                index++;
             }
+
+            return true;
         }
 
         public void CheckList(int[] array, MyLinkedList<int> list, int count)

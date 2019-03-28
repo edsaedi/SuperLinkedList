@@ -9,6 +9,7 @@ namespace SuperLinkedListTest
     {
 
         private Random rand = new Random(26);
+        public delegate MyLinkedList<int> Creation(int[] array, Action<int> addFunction);
 
         public MyLinkedList<int> ListGenerator(int[] array)
         {
@@ -32,34 +33,36 @@ namespace SuperLinkedListTest
                 do
                 {
                     val = rand.Next(0, size * 2);
-                    array[i] = val;
                 } while (array.Contains(val));
+
+                array[i] = val;
             }
 
             return array;
         }
 
-        public bool CheckNode(int[] array, MyLinkedList<int> list)
+        public void CheckNode(int[] array, MyLinkedList<int> list)
         {
             int index = 0;
-            foreach (int item in list)
+            int next;
+            int prev;
+            foreach (MyNode<int> item in list)
             {
-                if (array[index] != item)
+                Assert.True(array[index] == item.Value);
+                next = index + 1;
+                prev = index - 1;
+                if (next >= list.Count)
                 {
-                    return false;
+                    next = 0;
                 }
-                else if (array[index + 1] == item)
+                if (prev < 0)
                 {
-                    if (index + 1 >= list.Count)
-                    {
-
-                    }
+                    prev = list.Count - 1;
                 }
-
+                Assert.True(array[next] == item.Next.Value);
+                Assert.True(array[prev] == item.Prev.Value);
                 index++;
             }
-
-            return true;
         }
 
         public void CheckList(int[] array, MyLinkedList<int> list, int count)
@@ -69,15 +72,16 @@ namespace SuperLinkedListTest
         }
 
         [Fact]
-        public void Add()
+        public void AddFirst()
         {
             int size = 100;
-            int[] array = UniqueRandomization(size);
-            MyLinkedList<int> list = ListGenerator(array);
-            for (int i = 0; i < size; i++)
-            {
-
-            }
+            int[] array = SetupLinkList.UniqueRandomization(size);
+            //TODO:
+            //    |
+            //    | 
+            //   \|/
+            //MyLinkedList<int> list = SetupLinkList.ListGenerator(array, ? );
+            //CheckList(array, list, size);
         }
     }
 }

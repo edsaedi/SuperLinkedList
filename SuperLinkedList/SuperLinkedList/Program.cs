@@ -3,36 +3,38 @@ using System.Collections.Generic;
 
 namespace SuperLinkedList
 {
+    public class MyNode<T>
+    {
+        public T Value;
+        public MyNode<T> Next = null;
+        public MyNode<T> Prev = null;
+
+        internal MyNode(T value)
+        {
+            Value = value;
+        }
+
+        internal MyNode(T value, MyNode<T> next, MyNode<T> prev)
+        {
+            Value = value;
+            Next = next;
+            Prev = prev;
+        }
+    }
+
     /// <summary>
     /// A doubly circular linked list that can use System.Linq.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class MyLinkedList<T> : ICollection<T>
+    public class MyLinkedList<T> : ICollection<T>, IEnumerable<MyNode<T>>
     {
-        public class MyNode
-        {
-            public T Value;
-            public MyNode Next = null;
-            public MyNode Prev = null;
-
-            internal MyNode(T value)
-            {
-                Value = value;
-            }
-
-            internal MyNode(T value, MyNode next, MyNode prev)
-            {
-                Value = value;
-                Next = next;
-                Prev = prev;
-            }
-        }
+        
 
         public T this[int index]
         {
             get
             {
-                MyNode curr = Head;
+                MyNode<T> curr = Head;
                 for (int i = 0; i < index; i++)
                 {
                     curr = curr.Next;
@@ -41,7 +43,7 @@ namespace SuperLinkedList
             }
             set
             {
-                MyNode curr = Head;
+                MyNode<T> curr = Head;
                 for (int i = 0; i < index; i++)
                 {
                     curr = curr.Next;
@@ -54,8 +56,8 @@ namespace SuperLinkedList
 
         bool ICollection<T>.IsReadOnly => false;
 
-        public MyNode Head { get; private set; }
-        private MyNode Tail => Head.Prev;
+        public MyNode<T> Head { get; private set; }
+        private MyNode<T> Tail => Head.Prev;
 
         void ICollection<T>.Add(T item)
         {
@@ -72,13 +74,13 @@ namespace SuperLinkedList
         {
             if (Head == null)
             {
-                Head = new MyNode(item);
+                Head = new MyNode<T>(item);
                 Head.Next = Head;
                 Head.Prev = Head;
             }
             else
             {
-                MyNode node = new MyNode(item, Head, Tail);
+                MyNode<T> node = new MyNode<T>(item, Head, Tail);
                 Tail.Next = node;
                 Head.Prev = node; //shifts and redefines what tail is
             }
@@ -99,9 +101,9 @@ namespace SuperLinkedList
             return true;
         }
 
-        private MyNode Find(T item)
+        private MyNode<T> Find(T item)
         {
-            MyNode temp = Head;
+            MyNode<T> temp = Head;
             int count = 0;
             while (!temp.Value.Equals(item))
             {
@@ -129,18 +131,18 @@ namespace SuperLinkedList
             {
                 return false;
             }
-            MyNode node = Find(item);
+            MyNode<T> node = Find(item);
             node.Prev.Next = node.Next;
             node.Next.Prev = node.Prev;
             return true;
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public IEnumerator<MyNode<T>> GetEnumerator()
         {
-            MyNode currentNode = Head;
+            MyNode<T> currentNode = Head;
             for (int i = 0; i < Count; currentNode = currentNode.Next, i++)
             {
-                yield return currentNode.Value;
+                yield return currentNode;
             }
         }
 
@@ -148,6 +150,11 @@ namespace SuperLinkedList
         {
             return GetEnumerator();
         }
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
+        {
+            return (IEnumerator<T>)GetEnumerator().Current.Value;
+        }        
     }
 
     internal class Program

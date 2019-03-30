@@ -65,9 +65,39 @@ namespace SuperLinkedListTest
             }
         }
 
+        public void CheckNodeFirst(int[] array, MyLinkedList<int> list)
+        {
+            int index = list.Count - 1;
+            int next;
+            int prev;
+            foreach (MyNode<int> item in list)
+            {
+                Assert.True(array[index] == item.Value);
+                next = index - 1;
+                prev = index + 1;
+                if (next < 0)
+                {
+                    next = list.Count - 1;
+                }
+                if (prev >= list.Count)
+                {
+                    prev = 0;
+                }
+                Assert.True(array[next] == item.Next.Value);
+                Assert.True(array[prev] == item.Prev.Value);
+                index--;
+            }
+        }
+
         public void CheckList(int[] array, MyLinkedList<int> list, int count)
         {
             CheckNode(array, list);
+            Assert.True(list.Count == count);
+        }
+
+        public void CheckListFirst(int[] array, MyLinkedList<int> list, int count)
+        {
+            CheckNodeFirst(array, list);
             Assert.True(list.Count == count);
         }
 
@@ -80,8 +110,32 @@ namespace SuperLinkedListTest
             //    |
             //    | 
             //   \|/
-            //MyLinkedList<int> list = SetupLinkList.ListGenerator(array, ? );
-            //CheckList(array, list, size);
+            MyLinkedList<int> list = SetupLinkList.ListGenerator(array, AddType.AddFirst);
+            CheckListFirst(array, list, size);
         }
+
+        [Fact]
+        public void AddLast()
+        {
+            int size = 100;
+            int[] array = SetupLinkList.UniqueRandomization(size);
+            MyLinkedList<int> list = SetupLinkList.ListGenerator(array, AddType.AddLast);
+            CheckList(array, list, size);
+        }
+
+        [Fact]
+        public void Remove()
+        {
+            int size = 100;
+            int[] array = SetupLinkList.UniqueRandomization(size);
+            MyLinkedList<int> list = SetupLinkList.ListGenerator(array, AddType.AddLast);
+            Assert.True(list.Remove(array[0]));
+            Assert.False(list.Contains(array[0]));
+            Assert.True(list.Remove(array[49]));
+            Assert.False(list.Contains(array[49]));
+            Assert.True(list.Remove(array[99]));
+            Assert.False(list.Contains(array[99]));
+        }
+
     }
 }

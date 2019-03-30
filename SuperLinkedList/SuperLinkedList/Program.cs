@@ -28,7 +28,7 @@ namespace SuperLinkedList
     /// <typeparam name="T"></typeparam>
     public class MyLinkedList<T> : ICollection<T>, IEnumerable<MyNode<T>>
     {
-        
+
 
         public T this[int index]
         {
@@ -51,7 +51,7 @@ namespace SuperLinkedList
                 curr.Value = value;
             }
         }
-        
+
         public int Count { get; private set; } = 0;
 
         bool ICollection<T>.IsReadOnly => false;
@@ -111,6 +111,7 @@ namespace SuperLinkedList
                 {
                     return null;
                 }
+                count++;
                 temp = temp.Next;
             }
             return temp;
@@ -132,8 +133,13 @@ namespace SuperLinkedList
                 return false;
             }
             MyNode<T> node = Find(item);
+
             node.Prev.Next = node.Next;
             node.Next.Prev = node.Prev;
+            if (node == Head)
+            {
+                Head = Head.Next;
+            }
             return true;
         }
 
@@ -154,7 +160,7 @@ namespace SuperLinkedList
         IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
             return (IEnumerator<T>)GetEnumerator().Current.Value;
-        }        
+        }
     }
 
     internal class Program
